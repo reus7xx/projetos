@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lab. — Fashion Hero</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      background: #111;
+    }
+
+    .scene {
+      width: 100%;
+      min-height: 100vh;
+      background: #EDEDED;
+      font-family: 'Inter', 'Helvetica Neue', Helvetica, sans-serif;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ─────────────────────────────────── */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: clamp(20px, 2.8vw, 38px) clamp(24px, 6.25vw, 118px);
+      z-index: 10;
+      position: relative;
+    }
+
+    .logo { font-size: 13px; font-weight: 700; color: #000; }
+
+    .nav-links {
+      display: flex;
+      gap: clamp(20px, 3vw, 52px);
+      align-items: center;
+    }
+
+    .nav-link {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: #000;
+      opacity: 0.55;
+      text-decoration: none;
+      transition: opacity 200ms ease;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-link:hover { opacity: 1; }
+    .nav-arrow { font-size: 7px; }
+
+    .menu-dots { display: flex; gap: 5px; align-items: center; cursor: pointer; }
+
+    .dot {
+      width: 4px; height: 4px; border-radius: 50%;
+      background: #000; opacity: 0.55;
+      transition: opacity 200ms ease;
+    }
+
+    .menu-dots:hover .dot { opacity: 1; }
+
+    /* ── CONTENT ─────────────────────────────────── */
+    .content {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 38fr 62fr;
+      padding-left: clamp(24px, 6.25vw, 118px);
+      position: relative;
+      min-height: 0;
+    }
+
+    /* ── X/LABS — ligeiramente à esquerda do centro ─ */
+    .center-top {
+      position: absolute;
+      top: clamp(10px, 1.5vh, 22px);
+      left: calc(50% - 200px);
+      transform: translateX(-50%);
+      z-index: 6;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(8px, 1vw, 14px);
+    }
+
+    .sub-label {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 2.5px; text-transform: uppercase;
+      color: #000; opacity: 0.45;
+    }
+
+    .desc-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(10px, 1.5vw, 20px);
+      width: clamp(200px, 24vw, 340px);
+    }
+
+    .desc {
+      font-size: clamp(7.5px, 0.58vw, 9px);
+      font-weight: 400; letter-spacing: 0.6px;
+      text-transform: uppercase; color: #000;
+      opacity: 0.45; line-height: 1.8;
+    }
+
+    /* ── LEFT COLUMN ─────────────────────────────── */
+    .left {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding-right: clamp(16px, 2vw, 32px);
+      padding-bottom: clamp(32px, 5vw, 72px);
+      /* sem position: relative — .hundred se posiciona relativo a .content */
+    }
+
+    .headline-area {
+      margin-top: clamp(40px, calc(30vh - 20px), 280px);
+    }
+
+    .headline {
+      font-size: clamp(72px, 11.5vw, 178px);
+      font-weight: 800; line-height: 0.85;
+      letter-spacing: -0.03em; color: #000;
+    }
+
+    /* "100" rotacionado 270° (180° anterior + 90° mais),
+       quase colado na borda esquerda da página.
+       transform-origin: bottom left mantém o ponto de ancoragem
+       no canto inferior esquerdo do box CSS; após rotate(-90deg),
+       a borda visual esquerda = CSS left − font-size ≈ 4px da página. */
+    .hundred {
+      position: absolute;
+      bottom: clamp(38px, 4.5vw, 74px);
+      /* visual_left = CSS_left − font-size = padding-left (alinha com "l" do lab.) */
+      left: clamp(67px, 13.15vw, 225px);
+      transform: rotate(-90deg);
+      transform-origin: bottom left;
+      font-size: clamp(43px, 6.9vw, 107px);
+      font-weight: 800;
+      color: #000;
+      letter-spacing: -3px;
+      line-height: 1;
+      white-space: nowrap;
+      z-index: 5;
+    }
+
+    /* ── RIGHT COLUMN ────────────────────────────── */
+    .right { position: relative; }
+
+    /* Quadro cinza — ~50% mais fino que antes */
+    .image {
+      position: absolute;
+      top: 0;
+      left: clamp(336px, calc(2.5vw + 320px), 360px);
+      right: clamp(10px, calc(38vw - 230px), 300px);
+      bottom: 0;
+
+      z-index: 2;
+      overflow: hidden;
+    }
+
+    .image img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: top center;
+      display: block;
+    }
+
+    /* Faixa laranja — POR CIMA do cinza, 30% opacidade,
+       se estende até a borda direita da página */
+    .accent {
+      position: absolute;
+      bottom: clamp(80px, 12vw, 160px);
+      left: clamp(-24px, -2vw, -44px);
+      right: 0;
+      height: clamp(140px, 30%, 270px);
+      background: #FF4D2E;
+      opacity: 0.6;
+      z-index: 3;
+    }
+
+    /* Botão seta */
+    .arrow-btn {
+      position: absolute;
+      bottom: clamp(80px, 12vw, 160px);
+      left: clamp(-24px, -2vw, -44px);
+      transform: translateY(50%);
+      z-index: 4;
+      width: clamp(36px, 3vw, 46px);
+      height: clamp(36px, 3vw, 46px);
+      background: #FF4D2E;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: background 200ms ease;
+      border: none; outline: none;
+    }
+
+    .arrow-btn:hover { background: #000; }
+
+    .arrow-btn svg {
+      width: 15px; height: 15px;
+      fill: none; stroke: #fff;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    /* Texto vertical — ao lado direito do quadro cinza,
+       sobe até o topo do quadro (top: 0) */
+    .vertical-text {
+      position: absolute;
+      top: 0;
+      right: clamp(10px, calc(34vw - 240px), 240px);
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-size: clamp(7px, 0.58vw, 9px);
+      font-weight: 700; letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #000; opacity: 0.45;
+      white-space: nowrap;
+      z-index: 5;
+    }
+
+    /* ── TABLET ──────────────────────────────────── */
+    @media (max-width: 960px) {
+      .content { grid-template-columns: 42fr 58fr; }
+      .desc-cols { grid-template-columns: 1fr; }
+      .vertical-text { display: none; }
+      .center-top { left: 46%; }
+    }
+
+    /* ── MOBILE ──────────────────────────────────── */
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+
+      .content { grid-template-columns: 1fr; padding-left: 0; }
+
+      .center-top { display: none; }
+
+      .right {
+        order: 1;
+        height: clamp(300px, 65vw, 460px);
+        min-height: 300px;
+      }
+
+      .accent { left: 0; right: 0; }
+      .image { left: 20px; right: 0; }
+      .arrow-btn { left: 20px; }
+      .vertical-text { display: none; }
+
+      .left {
+        order: 2;
+        padding: 24px 24px 40px;
+        height: auto;
+      }
+
+      .headline-area { margin-top: 20px; }
+
+      .hundred {
+        position: relative;
+        bottom: auto; left: auto;
+        transform: rotate(-90deg);
+        transform-origin: center;
+        margin-top: 24px;
+        font-size: clamp(36px, 10vw, 56px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="scene">
+
+    <!-- HEADER -->
+    <header class="header">
+      <span class="logo">+1</span>
+      <nav class="nav-links">
+        <a class="nav-link" href="#">Projects</a>
+        <a class="nav-link" href="#">AW19</a>
+        <a class="nav-link" href="#">Shop</a>
+        <a class="nav-link" href="#">New Arrivals <span class="nav-arrow">▾</span></a>
+      </nav>
+      <div class="menu-dots" role="button" aria-label="Menu">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <main class="content">
+
+      <!-- X/LABS centralizado (levemente à esquerda) -->
+      <div class="center-top">
+        <span class="sub-label">X/Labs</span>
+        <div class="desc-cols">
+          <p class="desc">For x publication of x labs series, collection for active and protection body wear</p>
+          <p class="desc">For x publication of x labs series, collection for active and protection body wear</p>
+        </div>
+      </div>
+
+      <!-- LEFT -->
+      <div class="left">
+        <div class="headline-area">
+          <span class="headline">lab.</span>
+        </div>
+        <!-- 100 rotacionado 270° total, quase colado na borda esquerda -->
+        <span class="hundred" aria-hidden="true">100</span>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="right">
+        <div class="image" role="img" aria-label="Fashion campaign image">
+          <img src="imagem 01.png" alt="Fashion campaign" />
+        </div>
+        <div class="accent"></div>
+        <button class="arrow-btn" aria-label="View collection">
+          <svg viewBox="0 0 18 18" aria-hidden="true">
+            <line x1="3" y1="9" x2="15" y2="9"/>
+            <polyline points="10,4 15,9 10,14"/>
+          </svg>
+        </button>
+        <span class="vertical-text">X Lab. Als of Creation 2019</span>
+      </div>
+
+    </main>
+  </div>
+</body>
+</html>

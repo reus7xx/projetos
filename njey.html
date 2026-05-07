@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NJEY — Future of Technology</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =============================================
+       VARIÁVEIS E RESET
+    ============================================= */
+    :root {
+      --bg-primary: #111111;
+      --bg-card: #161616;
+      --bg-card-inner: #181818;
+      --text-primary: #FFFFFF;
+      --text-secondary: #AAAAAA;
+      --text-muted: #555555;
+      --accent-blue: #3B82F6;
+      --accent-blue-light: #6B8CFF;
+      --border-subtle: rgba(255, 255, 255, 0.07);
+      --border-medium: rgba(255, 255, 255, 0.15);
+      --font-hero: clamp(3.8rem, 8.5vw, 7.8rem);
+      --font-nav: 0.875rem;
+      --font-label: 0.65rem;
+      --font-body: 0.875rem;
+      --font-section-title: 0.75rem;
+      --radius-card: 20px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', 'Poppins', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* =============================================
+       NAVBAR
+    ============================================= */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      padding: 0 2rem;
+      background: rgba(14, 14, 14, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+      transition: background var(--transition), box-shadow var(--transition);
+    }
+
+    .navbar.scrolled {
+      background: rgba(10, 10, 10, 0.92);
+      box-shadow: 0 4px 32px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Logo */
+    .navbar__logo {
+      font-size: 1.4rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      color: var(--text-primary);
+      text-decoration: none;
+      flex-shrink: 0;
+      text-transform: uppercase;
+    }
+
+    /* Nav central */
+    .navbar__nav {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2.2rem;
+      list-style: none;
+    }
+
+    .navbar__nav a {
+      font-size: var(--font-nav);
+      font-weight: 400;
+      color: var(--text-secondary);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      position: relative;
+      transition: color var(--transition);
+    }
+
+    .navbar__nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--accent-blue);
+      transition: width var(--transition);
+    }
+
+    .navbar__nav a:hover {
+      color: var(--text-primary);
+    }
+
+    .navbar__nav a:hover::after {
+      width: 100%;
+    }
+
+    /* Lado direito da navbar */
+    .navbar__right {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .navbar__social {
+      display: flex;
+      align-items: center;
+      color: var(--text-secondary);
+      transition: color var(--transition);
+    }
+
+    .navbar__social:hover {
+      color: var(--text-primary);
+    }
+
+    .navbar__status {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .navbar__status-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent-blue);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Hamburguer */
+    .navbar__hamburger {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      border: none;
+      background: none;
+      aria-label: "Menu";
+    }
+
+    .navbar__hamburger span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: var(--text-secondary);
+      border-radius: 2px;
+      transition: all var(--transition);
+    }
+
+    .navbar__hamburger:hover span {
+      background: var(--text-primary);
+    }
+
+    .navbar__hamburger.active span:nth-child(1) {
+      transform: translateY(6.5px) rotate(45deg);
+    }
+    .navbar__hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .navbar__hamburger.active span:nth-child(3) {
+      transform: translateY(-6.5px) rotate(-45deg);
+    }
+
+    /* Menu mobile dropdown */
+    .mobile-menu {
+      position: fixed;
+      top: 64px;
+      left: 0;
+      right: 0;
+      z-index: 999;
+      background: rgba(10, 10, 10, 0.97);
+      backdrop-filter: blur(20px);
+      padding: 1.5rem 2rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      transform: translateY(-110%);
+      transition: transform var(--transition);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .mobile-menu.open {
+      transform: translateY(0);
+    }
+
+    .mobile-menu a {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border-subtle);
+      transition: color var(--transition);
+    }
+
+    .mobile-menu a:hover {
+      color: var(--text-primary);
+    }
+
+    /* =============================================
+       MAIN / WRAPPER
+    ============================================= */
+    .page-wrapper {
+      padding-top: 64px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* =============================================
+       HERO SECTION
+    ============================================= */
+    .hero {
+      padding: 2.5rem 1.5rem 0;
+      max-width: 1280px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Card principal do hero */
+    .hero__card {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-card);
+      padding: 2.8rem 0 2.8rem 2.8rem;
+      display: grid;
+      grid-template-columns: 42% 58%;
+      gap: 0;
+      overflow: hidden;
+      min-height: 500px;
+    }
+
+    /* Sem pseudo-elementos azulados */
+    .hero__card::before,
+    .hero__card::after {
+      content: none;
+    }
+
+    /* ---- Coluna esquerda ---- */
+    .hero__content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.1rem;
+      position: relative;
+      z-index: 2;
+      padding-right: 1.5rem;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeSlideUp 0.8s ease forwards 0.2s;
+    }
+
+    /* Micro-label */
+    .hero__label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--accent-blue-light);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      padding-left: 0.55rem;
+      border-left: 2px solid var(--accent-blue);
+    }
+
+    .hero__label-bar {
+      display: none;
+    }
+
+    /* Título FUTURE */
+    .hero__title {
+      font-size: var(--font-hero);
+      font-weight: 900;
+      line-height: 0.88;
+      letter-spacing: -2px;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      margin-top: 0.1rem;
+    }
+
+    /* Descrição */
+    .hero__desc {
+      font-size: 0.82rem;
+      line-height: 1.65;
+      color: var(--text-secondary);
+      max-width: 340px;
+    }
+
+    /* Botão CTA */
+    .hero__cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 8px 20px;
+      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: var(--text-primary);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      letter-spacing: 0.03em;
+      transition: all var(--transition);
+      width: fit-content;
+    }
+
+    .hero__cta:hover {
+      background: var(--accent-blue);
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .hero__cta-arrow {
+      font-size: 0.75rem;
+      transition: transform var(--transition);
+    }
+
+    .hero__cta:hover .hero__cta-arrow {
+      transform: translateX(4px);
+    }
+
+    /* Linha animada + label AI */
+    .hero__anim-row {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      margin-top: 0.2rem;
+    }
+
+    .hero__anim-line {
+      position: relative;
+      flex: 1;
+      max-width: 180px;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 1px;
+      overflow: visible;
+    }
+
+    /* Dot animado que percorre a linha */
+    .hero__anim-cursor {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent-blue);
+      box-shadow: 0 0 6px var(--accent-blue);
+      animation: slideDot 2.6s linear infinite;
+    }
+
+    @keyframes slideDot {
+      0%   { left: -6px; opacity: 0; }
+      8%   { opacity: 1; }
+      92%  { opacity: 1; }
+      100% { left: calc(100% + 6px); opacity: 0; }
+    }
+
+    .hero__anim-label {
+      font-size: 0.6rem;
+      color: #888;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ---- Coluna direita (imagem) ---- */
+    .hero__image-col {
+      position: relative;
+      border-radius: 0 var(--radius-card) var(--radius-card) 0;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeSlideUp 0.8s ease forwards 0.45s;
+      /* Alinhamento perfeito com o card pai */
+      margin-top: -2.8rem;
+      margin-bottom: -2.8rem;
+      margin-right: 0;
+    }
+
+    .hero__image-col img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+
+    /* Gradiente de fusão da esquerda para transparente */
+    .hero__image-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(
+          to right,
+          rgba(22, 22, 22, 0.75) 0%,
+          rgba(22, 22, 22, 0.3) 25%,
+          transparent 50%
+        ),
+        linear-gradient(
+          to bottom,
+          rgba(22, 22, 22, 0.2) 0%,
+          transparent 20%,
+          transparent 80%,
+          rgba(22, 22, 22, 0.4) 100%
+        );
+    }
+
+    /* Ícone de grid decorativo (dentro do card) */
+    .hero__grid-icon {
+      position: absolute;
+      top: 1.2rem;
+      right: 1.2rem;
+      opacity: 0.18;
+      z-index: 3;
+    }
+
+    .hero__grid-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Texto vertical decorativo na borda direita */
+    .hero__vertical-text {
+      position: absolute;
+      right: 0.6rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.55rem;
+      z-index: 4;
+      opacity: 0.18;
+    }
+
+    .hero__vertical-text span {
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
+    }
+
+    /* =============================================
+       ANIMAÇÕES FADE-IN
+    ============================================= */
+    @keyframes fadeSlideUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* =============================================
+       BOTTOM INFO BAR
+    ============================================= */
+    .info-bar {
+      max-width: 1280px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 0 1.5rem;
+    }
+
+    .info-bar__inner {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 1.8rem 2.8rem;
+      border: 1px solid var(--border-subtle);
+      border-top: none;
+      border-radius: 0 0 var(--radius-card) var(--radius-card);
+      background: #0e0e0e;
+      opacity: 0;
+      animation: fadeSlideUp 0.8s ease forwards 0.65s;
+    }
+
+    .info-bar__item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .info-bar__item:last-child {
+      text-align: right;
+      align-items: flex-end;
+    }
+
+    .info-bar__title {
+      font-size: var(--font-section-title);
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+    }
+
+    .info-bar__sub {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 360px;
+    }
+
+    .info-bar__divider {
+      width: 1px;
+      height: 48px;
+      background: var(--border-medium);
+      margin: 0 3rem;
+    }
+
+    /* =============================================
+       RESPONSIVIDADE
+    ============================================= */
+
+    /* Tablet */
+    @media (max-width: 1024px) {
+      .hero__card {
+        grid-template-columns: 1fr;
+        padding: 2.2rem 2rem 2rem;
+        min-height: auto;
+      }
+
+      .hero__content {
+        gap: 1rem;
+        padding-right: 0;
+      }
+
+      .hero__image-col {
+        height: 360px;
+        order: -1;
+        border-radius: var(--radius-card) var(--radius-card) 0 0;
+        margin: -2.2rem -2rem 0;
+      }
+
+      .hero__vertical-text {
+        display: none;
+      }
+
+      .info-bar__inner {
+        padding: 1.8rem 2rem;
+      }
+
+      .info-bar__divider {
+        margin: 0 1.8rem;
+      }
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .navbar__nav {
+        display: none;
+      }
+
+      .navbar__status {
+        display: none;
+      }
+
+      .hero {
+        padding: 1.2rem 1rem 0;
+      }
+
+      .hero__card {
+        padding: 1.8rem 1.4rem 1.4rem;
+        border-radius: var(--radius-card);
+      }
+
+      .hero__image-col {
+        height: 260px;
+        border-radius: var(--radius-card) var(--radius-card) 0 0;
+        margin: -1.8rem -1.4rem 0;
+      }
+
+      .hero__desc {
+        max-width: 100%;
+      }
+
+      .info-bar {
+        padding: 0 1rem;
+      }
+
+      .info-bar__inner {
+        grid-template-columns: 1fr;
+        padding: 1.6rem 1.4rem;
+        gap: 1.4rem;
+        border-radius: 0 0 var(--radius-card) var(--radius-card);
+      }
+
+      .info-bar__divider {
+        width: 100%;
+        height: 1px;
+        margin: 0;
+      }
+
+      .info-bar__item:last-child {
+        text-align: left;
+        align-items: flex-start;
+      }
+
+      .info-bar__sub {
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar {
+        padding: 0 1.1rem;
+      }
+
+      .hero__card {
+        padding: 1.4rem 1.1rem 1.2rem;
+      }
+
+      .hero__image-col {
+        height: 220px;
+        margin: -1.4rem -1.1rem 0;
+      }
+
+      .hero__anim-line {
+        max-width: 100px;
+      }
+    }
+
+    /* =============================================
+       SCROLLBAR CUSTOMIZADA
+    ============================================= */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #333;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #444;
+    }
+
+    /* =============================================
+       FOCO VISÍVEL (ACESSIBILIDADE)
+    ============================================= */
+    *:focus-visible {
+      outline: 2px solid var(--accent-blue);
+      outline-offset: 3px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =============================================
+       NAVBAR
+  ============================================= -->
+  <header>
+    <nav class="navbar" id="navbar" role="navigation" aria-label="Navegação principal">
+
+      <!-- Logo -->
+      <a href="#" class="navbar__logo" aria-label="NJEY - Página inicial">NJEY</a>
+
+      <!-- Links de navegação (desktop) -->
+      <ul class="navbar__nav" role="list">
+        <li><a href="#" aria-current="page">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#works">Works</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#contacts">Contacts</a></li>
+      </ul>
+
+      <!-- Lado direito -->
+      <div class="navbar__right">
+
+        <!-- Ícone LinkedIn -->
+        <a href="#" class="navbar__social" aria-label="LinkedIn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+            <rect x="2" y="9" width="4" height="12"/>
+            <circle cx="4" cy="4" r="2"/>
+          </svg>
+        </a>
+
+        <!-- Status -->
+        <div class="navbar__status" aria-label="Status: ING TAC">
+          <span class="navbar__status-dot" aria-hidden="true"></span>
+          <span>ING TAC</span>
+        </div>
+
+        <!-- Hamburguer (mobile) -->
+        <button
+          class="navbar__hamburger"
+          id="hamburger"
+          aria-label="Abrir menu de navegação"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Menu mobile -->
+    <div class="mobile-menu" id="mobile-menu" role="menu" aria-label="Menu de navegação mobile">
+      <a href="#" role="menuitem">Home</a>
+      <a href="#about" role="menuitem">About</a>
+      <a href="#works" role="menuitem">Works</a>
+      <a href="#services" role="menuitem">Services</a>
+      <a href="#contacts" role="menuitem">Contacts</a>
+    </div>
+  </header>
+
+  <!-- =============================================
+       CONTEÚDO PRINCIPAL
+  ============================================= -->
+  <main class="page-wrapper">
+
+    <!-- HERO SECTION -->
+    <section class="hero" id="home" aria-label="Seção principal">
+
+      <!-- Card hero principal -->
+      <article class="hero__card">
+
+        <!-- Ícone de grid decorativo (canto superior direito do card) -->
+        <div class="hero__grid-icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <circle cx="2" cy="2" r="1.2" fill="rgba(255,255,255,0.5)"/>
+            <circle cx="10" cy="2" r="1.2" fill="rgba(255,255,255,0.5)"/>
+            <circle cx="18" cy="2" r="1.2" fill="rgba(255,255,255,0.5)"/>
+            <circle cx="2" cy="10" r="1.2" fill="rgba(255,255,255,0.5)"/>
+            <circle cx="10" cy="10" r="1.2" fill="rgba(255,255,255,0.5)"/>
+            <circle cx="18" cy="10" r="1.2" fill="rgba(255,255,255,0.5)"/>
+            <circle cx="2" cy="18" r="1.2" fill="rgba(255,255,255,0.5)"/>
+            <circle cx="10" cy="18" r="1.2" fill="rgba(255,255,255,0.5)"/>
+            <circle cx="18" cy="18" r="1.2" fill="rgba(255,255,255,0.5)"/>
+          </svg>
+        </div>
+
+        <!-- Texto vertical decorativo (letras empilhadas) -->
+        <div class="hero__vertical-text" aria-hidden="true">
+          <span>Y</span>
+          <span>S</span>
+          <span>I</span>
+          <span>T</span>
+          <span>A</span>
+        </div>
+
+        <!-- === COLUNA ESQUERDA: CONTEÚDO === -->
+        <div class="hero__content">
+
+          <!-- Micro-label -->
+          <div class="hero__label">
+            <span class="hero__label-bar" aria-hidden="true"></span>
+            HERE AND NOW
+          </div>
+
+          <!-- Título principal -->
+          <h1 class="hero__title">FUTURE</h1>
+
+          <!-- Descrição -->
+          <p class="hero__desc">
+            Drive Deeper into the World of the Modern Technology. Now with AI or we can say Artificial Intelligence with our new advanced technology!
+          </p>
+
+          <!-- Botão CTA -->
+          <a href="#services" class="hero__cta" aria-label="Saiba mais sobre nossos serviços">
+            Let's Go
+            <span class="hero__cta-arrow" aria-hidden="true">→</span>
+          </a>
+
+          <!-- Linha animada + label -->
+          <div class="hero__anim-row" aria-hidden="true">
+            <div class="hero__anim-line">
+              <div class="hero__anim-cursor"></div>
+            </div>
+            <span class="hero__anim-label">Artificial Intelligence</span>
+          </div>
+
+        </div>
+
+        <!-- === COLUNA DIREITA: VAZIA === -->
+        <div class="hero__image-col"></div>
+
+      </article>
+    </section>
+
+    <!-- BOTTOM INFO BAR -->
+    <section class="info-bar" id="about" aria-label="Pilares tecnológicos">
+      <div class="info-bar__inner">
+
+        <!-- Coluna 1: Technology -->
+        <div class="info-bar__item">
+          <h2 class="info-bar__title">Technology</h2>
+          <p class="info-bar__sub">
+            AI fuels innovation and transforms technology across every industry.
+          </p>
+        </div>
+
+        <!-- Divisor -->
+        <div class="info-bar__divider" role="separator" aria-hidden="true"></div>
+
+        <!-- Coluna 2: Innovation -->
+        <div class="info-bar__item">
+          <h2 class="info-bar__title">Innovation</h2>
+          <p class="info-bar__sub">
+            AI sparks innovation, reshaping global technology and human progress.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =============================================
+       JAVASCRIPT
+  ============================================= -->
+  <script>
+    // --- Navbar: efeito scroll ---
+    const navbar = document.getElementById('navbar');
+    let lastScroll = 0;
+
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      navbar.classList.toggle('scrolled', scrollY > 20);
+      lastScroll = scrollY;
+    }, { passive: true });
+
+    // --- Menu hamburguer ---
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    hamburger.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.toggle('open');
+      hamburger.classList.toggle('active', isOpen);
+      hamburger.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    // Fechar menu ao clicar em um link
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        hamburger.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // Fechar menu ao clicar fora
+    document.addEventListener('click', (e) => {
+      if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
+        mobileMenu.classList.remove('open');
+        hamburger.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QUESOCASA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background-color: #000000;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ELEMENT 1 — LOGO */
+    .logo {
+      position: absolute;
+      top: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 1.5px solid #FFFFFF;
+      background: transparent;
+      padding: 6px 8px;
+      width: 58px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-text {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 8px;
+      color: #FFFFFF;
+      letter-spacing: 1.2px;
+      line-height: 10px;
+      text-align: center;
+      white-space: pre-line;
+    }
+
+    /* ELEMENT 2 — LANGUAGE SWITCHER */
+    .lang-switcher {
+      position: absolute;
+      top: 38px;
+      right: 80px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .lang-active {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      color: #FFFFFF;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .lang-inactive {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 10px;
+      color: #555555;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* ELEMENT 3 — HEADLINE */
+    .headline {
+      position: absolute;
+      left: 55px;
+      top: 32%;
+      display: flex;
+      align-items: baseline;
+      line-height: 1;
+    }
+
+    .hello-text {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: clamp(160px, 22vw, 370px);
+      color: #FFE400;
+      letter-spacing: -8px;
+      display: inline-block;
+    }
+
+    /* ELEMENT 4 — ANIMATED DOT */
+    .dot {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: clamp(160px, 22vw, 370px);
+      color: #FFE400;
+      letter-spacing: 0;
+      display: inline-block;
+      animation: dotSlide 4.4s ease-in-out infinite;
+    }
+
+    @keyframes dotSlide {
+      0%   { transform: translateX(0); }
+      50%  { transform: translateX(calc(100vw - var(--dot-right-offset, 200px) - 20px)); }
+      100% { transform: translateX(0); }
+    }
+
+    /* ELEMENT 5 — RIGHT SIDE VERTICAL NAVIGATION */
+    .nav-right {
+      position: absolute;
+      right: 18px;
+      top: 15%;
+      height: 70%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-item-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-active-indicator {
+      width: 1.5px;
+      height: 18px;
+      background: #FFFFFF;
+    }
+
+    .nav-item {
+      font-family: 'Inter', sans-serif;
+      font-size: 9.5px;
+      letter-spacing: 1.5px;
+      text-decoration: none;
+      cursor: pointer;
+      transform: rotate(-90deg);
+      white-space: nowrap;
+      display: block;
+    }
+
+    .nav-item.active {
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+
+    .nav-item.inactive {
+      font-weight: 400;
+      color: #555555;
+    }
+
+    /* ELEMENT 6 — SCROLL DOWN INDICATOR */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 82px;
+      display: flex;
+      align-items: flex-end;
+      gap: 0;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 45px;
+      background: #555555;
+      flex-shrink: 0;
+    }
+
+    .scroll-text {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 9px;
+      color: #555555;
+      letter-spacing: 1.5px;
+      transform: rotate(-90deg);
+      transform-origin: left bottom;
+      white-space: nowrap;
+      margin-left: 6px;
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- ELEMENT 1: LOGO -->
+    <div class="logo">
+      <span class="logo-text">QUE&#10;SOC&#10;ASA.</span>
+    </div>
+
+    <!-- ELEMENT 2: LANGUAGE SWITCHER -->
+    <div class="lang-switcher">
+      <span class="lang-active">Eng</span>
+      <span class="lang-inactive">Rus</span>
+    </div>
+
+    <!-- ELEMENT 3 + 4: HEADLINE WITH ANIMATED DOT -->
+    <div class="headline">
+      <span class="hello-text">hello</span><span class="dot" id="dot">.</span>
+    </div>
+
+    <!-- ELEMENT 5: RIGHT SIDE VERTICAL NAVIGATION -->
+    <nav class="nav-right">
+      <div class="nav-item-wrapper">
+        <div class="nav-active-indicator"></div>
+        <span class="nav-item active">home</span>
+      </div>
+      <span class="nav-item inactive">about us</span>
+      <span class="nav-item inactive">our work</span>
+      <span class="nav-item inactive">services</span>
+      <span class="nav-item inactive">contact</span>
+    </nav>
+
+    <!-- ELEMENT 6: SCROLL DOWN INDICATOR -->
+    <div class="scroll-indicator">
+      <div class="scroll-line"></div>
+      <span class="scroll-text">scroll down</span>
+    </div>
+
+  </div>
+
+  <script>
+    const dot = document.getElementById('dot');
+
+    function updateDotOffset() {
+      const rect = dot.getBoundingClientRect();
+      // Distance from dot's left edge to right edge of viewport, plus a small buffer for the dot width
+      const offset = window.innerWidth - rect.left;
+      document.documentElement.style.setProperty('--dot-right-offset', offset + 'px');
+    }
+
+    // Run after fonts load for accurate measurements
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        updateDotOffset();
+      });
+    } else {
+      window.addEventListener('load', updateDotOffset);
+    }
+
+    window.addEventListener('resize', updateDotOffset);
+  </script>
+</body>
+</html>

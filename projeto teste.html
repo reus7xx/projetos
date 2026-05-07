@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Studio — Design Moderno</title>
+
+  <!-- Google Fonts: Inter para corpo, Playfair Display para títulos -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      /* Paleta de cores */
+      --color-bg:        #f9f8f6;
+      --color-surface:   #ffffff;
+      --color-accent:    #1a1a1a;
+      --color-muted:     #6b7280;
+      --color-border:    #e5e7eb;
+      --color-highlight: #d4a853;
+
+      /* Tipografia */
+      --font-body:    'Inter', sans-serif;
+      --font-display: 'Playfair Display', serif;
+
+      /* Espaçamentos */
+      --section-py: 120px;
+      --content-max: 720px;
+      --wide-max:    1080px;
+
+      /* Animações */
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--color-bg);
+      color: var(--color-accent);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img { display: block; max-width: 100%; }
+    a   { color: inherit; text-decoration: none; }
+
+    /* ============================================================
+       ANIMAÇÕES BASEADAS EM SCROLL — estado inicial e final
+       Cada elemento com [data-animate] começa invisível e
+       deslocado. A classe .visible é adicionada pelo JS.
+    ============================================================ */
+    [data-animate] {
+      opacity: 0;
+      transform: translateY(36px);
+      transition:
+        opacity  0.8s var(--ease-out),
+        transform 0.8s var(--ease-out);
+    }
+
+    /* Delay escalonado (stagger) declarado via atributo data-delay */
+    [data-animate][data-delay="1"] { transition-delay: 0.1s; }
+    [data-animate][data-delay="2"] { transition-delay: 0.2s; }
+    [data-animate][data-delay="3"] { transition-delay: 0.3s; }
+    [data-animate][data-delay="4"] { transition-delay: 0.4s; }
+    [data-animate][data-delay="5"] { transition-delay: 0.5s; }
+
+    /* Estado final: elemento visível, na posição original */
+    [data-animate].visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ============================================================
+       BARRA DE NAVEGAÇÃO
+    ============================================================ */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 360px;
+      padding: 14px 32px;
+      background: transparent;
+      backdrop-filter: none;
+      border-bottom: none;
+    }
+
+
+    .nav__logo {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #fff;
+      transition: color 0.5s ease;
+    }
+
+    .nav__links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav__links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.7);
+      transition: color 0.5s ease;
+    }
+
+    .nav__links a:hover {
+      color: #fff;
+    }
+
+    /* Nav no fundo claro */
+    .nav--light .nav__logo        { color: var(--color-accent); }
+    .nav--light .nav__links a     { color: var(--color-muted);  }
+    .nav--light .nav__links a:hover { color: var(--color-accent); }
+
+    /* ============================================================
+       UTILITÁRIOS DE LAYOUT
+    ============================================================ */
+    .container {
+      width: 100%;
+      max-width: var(--wide-max);
+      margin-inline: auto;
+      padding-inline: 40px;
+    }
+
+    .container--narrow {
+      max-width: var(--content-max);
+    }
+
+    /* ============================================================
+       COMPONENTES DE TEXTO
+    ============================================================ */
+    .eyebrow {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-highlight);
+      margin-bottom: 20px;
+    }
+
+    .heading-xl {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .heading-lg {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    .lead {
+      font-size: 1.125rem;
+      color: var(--color-muted);
+      max-width: 520px;
+      margin-inline: auto;
+    }
+
+    /* ============================================================
+       BOTÕES
+    ============================================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 6px;
+      font-family: var(--font-body);
+      font-size: 0.9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    .btn--primary {
+      background: var(--color-accent);
+      color: #fff;
+    }
+
+    .btn--outline {
+      background: transparent;
+      color: var(--color-accent);
+      border: 1.5px solid var(--color-accent);
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 36px;
+    }
+
+    /* ============================================================
+       SEÇÃO HERO
+    ============================================================ */
+    /* Track que gera o espaço de scroll */
+    .hero-track {
+      position: relative;
+      height: calc(var(--slide-count, 5) * 120vh);
+    }
+
+    .hero {
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: 140px 40px 80px;
+      background: var(--color-bg);
+      box-shadow:
+        inset 0    0   200px rgba(0,0,0,0.55),
+        inset 90px  0   130px rgba(0,0,0,0.20),
+        inset -90px 0   130px rgba(0,0,0,0.20),
+        inset 0  -90px  130px rgba(0,0,0,0.40);
+      transition: background 0.85s var(--ease-out);
+    }
+
+    .hero__left {
+      width: 30%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding-left: 60px;
+    }
+
+    .hero__center {
+      width: 40%;
+      position: relative;
+      height: 70vh;
+      perspective: 1200px;
+      perspective-origin: 50% 50%;
+    }
+
+    /* ── Carrossel 3D ── */
+    .hero__slide {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 400px;
+      transform-origin: center center;
+      transition:
+        transform 0.8s var(--ease-out),
+        opacity   0.8s var(--ease-out),
+        filter    0.8s ease;
+      will-change: transform, opacity, filter;
+      pointer-events: none;
+    }
+
+    .hero__slide img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 10px;
+    }
+
+    /* Centro — destaque */
+    .hero__slide[data-pos="center"] {
+      transform: translate(-50%, -50%) translateZ(80px) rotateY(0deg);
+      opacity: 1;
+      z-index: 3;
+      filter: brightness(1) drop-shadow(0 24px 60px rgba(0,0,0,0.55));
+      pointer-events: auto;
+    }
+
+    /* Lateral esquerda */
+    .hero__slide[data-pos="left"] {
+      transform: translate(-50%, -50%) translateX(-260px) translateZ(-60px) rotateY(42deg) scale(0.8);
+      opacity: 1;
+      z-index: 2;
+      filter: brightness(0.38);
+    }
+
+    /* Lateral direita */
+    .hero__slide[data-pos="right"] {
+      transform: translate(-50%, -50%) translateX(260px) translateZ(-60px) rotateY(-42deg) scale(0.8);
+      opacity: 1;
+      z-index: 2;
+      filter: brightness(0.38);
+    }
+
+    /* Fora de cena — direita (entrada) */
+    .hero__slide[data-pos="far-right"] {
+      transform: translate(-50%, -50%) translateX(600px) translateZ(-180px) rotateY(-85deg) scale(0.5);
+      opacity: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Fora de cena — esquerda (saída) */
+    .hero__slide[data-pos="far-left"] {
+      transform: translate(-50%, -50%) translateX(-600px) translateZ(-180px) rotateY(85deg) scale(0.5);
+      opacity: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Indicadores de slide (bolinhas) */
+    .hero__dots {
+      position: absolute;
+      bottom: 48px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .hero__dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-muted);
+      opacity: 0.4;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .hero__dot.active {
+      opacity: 1;
+      transform: scale(1.4);
+      background: var(--color-accent);
+    }
+
+    .hero__right {
+      width: 30%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      text-align: right;
+      padding-right: 60px;
+    }
+
+    .hero__left .heading-xl,
+    .hero__right .heading-xl {
+      font-size: clamp(2rem, 3.5vw, 3.5rem);
+      color: #fff;
+      transition: color 0.5s ease;
+    }
+
+    /* Títulos no fundo claro */
+    .hero--light .hero__left .heading-xl,
+    .hero--light .hero__right .heading-xl {
+      color: var(--color-accent);
+    }
+
+    /* Linha de destaque com cor */
+    .hero__left em,
+    .hero__right em {
+      font-style: normal;
+      color: var(--color-highlight);
+    }
+
+    .hero__btn {
+      margin-top: 32px;
+    }
+
+    .hero__scroll-hint {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--color-muted);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    .hero__scroll-hint svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* ============================================================
+       SEÇÃO DIVISÓRIA (linha decorativa)
+    ============================================================ */
+    .divider {
+      width: 100%;
+      max-width: var(--wide-max);
+      margin-inline: auto;
+      padding-inline: 40px;
+    }
+
+    .divider hr {
+      border: none;
+      border-top: 1px solid var(--color-border);
+    }
+
+    /* ============================================================
+       SEÇÃO DE CONTEÚDO — grid de cards
+    ============================================================ */
+    .content {
+      padding-block: var(--section-py);
+    }
+
+    .content__header {
+      text-align: center;
+      margin-bottom: 72px;
+    }
+
+    .content__header .lead {
+      margin-top: 16px;
+    }
+
+    /* Grid de 3 colunas responsivo */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 36px 32px;
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+
+    .card:hover {
+      box-shadow: 0 12px 40px rgba(0,0,0,0.07);
+      transform: translateY(-4px);
+    }
+
+    .card__icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: var(--color-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      margin-bottom: 20px;
+    }
+
+    .card__title {
+      font-size: 1.0625rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .card__text {
+      font-size: 0.9375rem;
+      color: var(--color-muted);
+      line-height: 1.65;
+    }
+
+    /* ============================================================
+       SEÇÃO DE MÉTRICAS (números em destaque)
+    ============================================================ */
+    .metrics {
+      padding-block: var(--section-py);
+      background: var(--color-accent);
+      color: #fff;
+    }
+
+    .metrics__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 40px;
+      text-align: center;
+    }
+
+    .metric__number {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: var(--color-highlight);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .metric__label {
+      font-size: 0.9375rem;
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* ============================================================
+       SEÇÃO FINAL (CTA)
+    ============================================================ */
+    .cta {
+      padding-block: var(--section-py);
+      text-align: center;
+    }
+
+    .cta__box {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 20px;
+      padding: 80px 60px;
+      max-width: 680px;
+      margin-inline: auto;
+    }
+
+    .cta__title {
+      margin-bottom: 16px;
+    }
+
+    .cta__subtitle {
+      color: var(--color-muted);
+      font-size: 1.0625rem;
+      max-width: 440px;
+      margin-inline: auto;
+    }
+
+    /* ============================================================
+       RODAPÉ
+    ============================================================ */
+    .footer {
+      padding: 32px 40px;
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer__brand {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.125rem;
+    }
+
+    .footer__copy {
+      font-size: 0.875rem;
+      color: var(--color-muted);
+    }
+
+    /* ============================================================
+       RESPONSIVO
+    ============================================================ */
+    @media (max-width: 640px) {
+      :root { --section-py: 80px; }
+
+      .nav          { padding: 16px 20px; }
+      .nav__links   { display: none; }
+      .container    { padding-inline: 20px; }
+      .cta__box     { padding: 48px 24px; }
+      .footer       { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================================================
+       NAVEGAÇÃO FIXADA
+  ============================================================ -->
+  <nav class="nav" id="nav" aria-label="Navegação principal">
+    <span class="nav__logo">Studio.</span>
+    <ul class="nav__links">
+      <li><a href="#features">Recursos</a></li>
+      <li><a href="#metrics">Números</a></li>
+      <li><a href="#cta">Contato</a></li>
+    </ul>
+  </nav>
+
+
+  <!-- ============================================================
+       SEÇÃO 1 — HERO (envolta no track de scroll)
+  ============================================================ -->
+  <div class="hero-track" id="heroTrack">
+  <section class="hero" id="hero" aria-labelledby="hero-title">
+
+    <!-- Coluna esquerda -->
+    <div class="hero__left">
+      <h1 class="heading-xl" id="hero-title" data-animate data-delay="1">
+        Design que<br><em>inspira</em>
+      </h1>
+      <div class="hero__btn" data-animate data-delay="2">
+        <a href="#cta" class="btn btn--primary">Começar projeto</a>
+      </div>
+    </div>
+
+    <!-- Centro — slides de imagem -->
+    <div class="hero__center">
+
+      <div class="hero__slide" data-pos="center" data-bg="radial-gradient(ellipse 50% 22% at 50% 78%, rgba(210,40,40,0.16) 0%, transparent 100%), radial-gradient(ellipse 55% 50% at 50% 35%, rgba(130,18,18,0.30) 0%, transparent 100%), radial-gradient(ellipse at 50% 42%, #3a0808 0%, #180404 38%, #060000 68%, #000000 100%)">
+        <img src="vermelho.png" alt="Look Vermelho" />
+      </div>
+
+      <div class="hero__slide" data-pos="right" data-bg="radial-gradient(ellipse 50% 22% at 50% 78%, rgba(150,35,230,0.15) 0%, transparent 100%), radial-gradient(ellipse 55% 50% at 50% 35%, rgba(80,18,148,0.28) 0%, transparent 100%), radial-gradient(ellipse at 50% 42%, #2a0c52 0%, #140526 38%, #05000e 68%, #000000 100%)">
+        <img src="roxo.png" alt="Look Roxo" />
+      </div>
+
+      <div class="hero__slide" data-pos="far-right" data-bg="radial-gradient(ellipse 50% 22% at 50% 78%, rgba(100,100,100,0.12) 0%, transparent 100%), radial-gradient(ellipse 55% 50% at 50% 35%, rgba(60,60,60,0.25) 0%, transparent 100%), radial-gradient(ellipse at 50% 42%, #222222 0%, #111111 38%, #060606 68%, #000000 100%)">
+        <img src="preto.png" alt="Look Preto" />
+      </div>
+
+      <div class="hero__slide" data-pos="far-right" data-bg="radial-gradient(ellipse 50% 22% at 50% 78%, rgba(255,252,245,0.16) 0%, transparent 100%), radial-gradient(ellipse 55% 50% at 50% 35%, rgba(235,230,220,0.28) 0%, transparent 100%), radial-gradient(ellipse at 50% 42%, #dedad2 0%, #bcb8b0 38%, #909090 68%, #686460 100%)" data-light="true">
+        <img src="branco.png" alt="Look Branco" />
+      </div>
+
+      <div class="hero__slide" data-pos="far-right" data-bg="radial-gradient(ellipse 50% 22% at 50% 78%, rgba(30,75,230,0.15) 0%, transparent 100%), radial-gradient(ellipse 55% 50% at 50% 35%, rgba(12,36,140,0.28) 0%, transparent 100%), radial-gradient(ellipse at 50% 42%, #0a1a50 0%, #050e28 38%, #020410 68%, #000000 100%)">
+        <img src="azul.png" alt="Look Azul" />
+      </div>
+
+    </div>
+
+    <!-- Coluna direita -->
+    <div class="hero__right">
+      <h2 class="heading-xl" data-animate data-delay="1">
+        código que<br><em>perdura</em>.
+      </h2>
+      <div class="hero__btn" data-animate data-delay="2">
+        <a href="#features" class="btn btn--outline">Ver trabalhos</a>
+      </div>
+    </div>
+
+    <!-- Bolinhas indicadoras de slide -->
+    <div class="hero__dots" id="heroDots" aria-hidden="true"></div>
+
+    <!-- Indicador de scroll -->
+    <div class="hero__scroll-hint" aria-hidden="true">
+      <span>Scroll</span>
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M8 2v12M2 8l6 6 6-6"/>
+      </svg>
+    </div>
+
+  </section>
+  </div>
+
+
+  <!-- Linha divisória -->
+  <div class="divider"><hr /></div>
+
+
+  <!-- ============================================================
+       SEÇÃO 2 — CARDS DE CONTEÚDO
+  ============================================================ -->
+  <section class="content" id="features" aria-labelledby="features-title">
+    <div class="container">
+
+      <!-- Cabeçalho da seção -->
+      <header class="content__header">
+        <span class="eyebrow"     data-animate data-delay="1">O que fazemos</span>
+        <h2 class="heading-lg"   data-animate data-delay="2" id="features-title">
+          Disciplinas que<br>elevam produtos
+        </h2>
+        <p class="lead"           data-animate data-delay="3">
+          Cada entrega é pensada do briefing ao pixel final,
+          com atenção obsessiva a detalhe e usabilidade.
+        </p>
+      </header>
+
+      <!-- Grid de cards — cada card tem seu próprio delay para stagger -->
+      <div class="cards">
+
+        <article class="card" data-animate data-delay="1">
+          <div class="card__icon" aria-hidden="true">✦</div>
+          <h3 class="card__title">Design de Produto</h3>
+          <p class="card__text">
+            Interfaces intuitivas construídas sobre pesquisa real com
+            usuários, sistemas de design escaláveis e prototipagem rápida.
+          </p>
+        </article>
+
+        <article class="card" data-animate data-delay="2">
+          <div class="card__icon" aria-hidden="true">◈</div>
+          <h3 class="card__title">Desenvolvimento Web</h3>
+          <p class="card__text">
+            Código semântico, performático e acessível. Sites e aplicações
+            que carregam rápido e convertem visitantes em clientes.
+          </p>
+        </article>
+
+        <article class="card" data-animate data-delay="3">
+          <div class="card__icon" aria-hidden="true">⬡</div>
+          <h3 class="card__title">Identidade Visual</h3>
+          <p class="card__text">
+            Marcas com caráter — logotipos, paletas, tipografias e guias
+            que comunicam sua essência em qualquer contexto.
+          </p>
+        </article>
+
+        <article class="card" data-animate data-delay="4">
+          <div class="card__icon" aria-hidden="true">◎</div>
+          <h3 class="card__title">Estratégia de Conteúdo</h3>
+          <p class="card__text">
+            Narrativas coerentes que guiam o usuário do primeiro clique
+            até a decisão de compra com clareza e confiança.
+          </p>
+        </article>
+
+        <article class="card" data-animate data-delay="5">
+          <div class="card__icon" aria-hidden="true">⟐</div>
+          <h3 class="card__title">Motion & Animação</h3>
+          <p class="card__text">
+            Micro-interações e animações que dão vida à interface sem
+            comprometer performance ou acessibilidade.
+          </p>
+        </article>
+
+        <article class="card" data-animate data-delay="1">
+          <div class="card__icon" aria-hidden="true">▸</div>
+          <h3 class="card__title">Consultoria & Revisão</h3>
+          <p class="card__text">
+            Auditoria profunda do seu produto atual com um plano de ação
+            priorizado para melhorar métricas e experiência.
+          </p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SEÇÃO 3 — MÉTRICAS / NÚMEROS
+  ============================================================ -->
+  <section class="metrics" id="metrics" aria-labelledby="metrics-title">
+    <div class="container">
+
+      <div class="metrics__grid">
+
+        <div data-animate data-delay="1">
+          <div class="metric__number">+120</div>
+          <div class="metric__label">Projetos entregues</div>
+        </div>
+
+        <div data-animate data-delay="2">
+          <div class="metric__number">98%</div>
+          <div class="metric__label">Clientes satisfeitos</div>
+        </div>
+
+        <div data-animate data-delay="3">
+          <div class="metric__number">8+</div>
+          <div class="metric__label">Anos de experiência</div>
+        </div>
+
+        <div data-animate data-delay="4">
+          <div class="metric__number">24h</div>
+          <div class="metric__label">Tempo de resposta</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SEÇÃO 4 — CTA FINAL
+  ============================================================ -->
+  <section class="cta" id="cta" aria-labelledby="cta-title">
+    <div class="container container--narrow">
+
+      <div class="cta__box">
+
+        <span class="eyebrow"      data-animate data-delay="1">Próximo passo</span>
+
+        <h2 class="heading-lg cta__title" data-animate data-delay="2" id="cta-title">
+          Vamos criar algo<br>memorável juntos.
+        </h2>
+
+        <p class="cta__subtitle"   data-animate data-delay="3">
+          Conte-nos sobre o seu projeto. Respondemos em até 24 horas
+          com um plano inicial sem compromisso.
+        </p>
+
+        <div class="btn-group"     data-animate data-delay="4">
+          <a href="mailto:contato@studio.co" class="btn btn--primary">
+            Enviar mensagem
+          </a>
+          <a href="#hero" class="btn btn--outline">Voltar ao topo</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       RODAPÉ
+  ============================================================ -->
+  <footer class="footer">
+    <span class="footer__brand">Studio.</span>
+    <span class="footer__copy">© 2026 Studio. Todos os direitos reservados.</span>
+  </footer>
+
+
+  <!-- ============================================================
+       JAVASCRIPT — Scroll animations + Nav behavior
+  ============================================================ -->
+  <script>
+    const animatedElements = document.querySelectorAll('[data-animate]');
+
+    const observerOptions = {
+      root:       null,
+      rootMargin: '0px',
+      threshold:  0.15,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    animatedElements.forEach((el) => observer.observe(el));
+
+    const nav = document.getElementById('nav');
+
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+
+    /* ── Hero scroll-driven slideshow ── */
+    const heroTrack  = document.getElementById('heroTrack');
+    const heroEl     = document.getElementById('hero');
+    const slides     = Array.from(document.querySelectorAll('.hero__slide'));
+    const dotsWrap   = document.getElementById('heroDots');
+    const totalSlides = slides.length;
+
+    /* Cria bolinhas indicadoras */
+    slides.forEach((_, i) => {
+      const dot = document.createElement('span');
+      dot.className = 'hero__dot' + (i === 0 ? ' active' : '');
+      dotsWrap.appendChild(dot);
+    });
+    const dots = Array.from(dotsWrap.children);
+
+    let currentIndex = -1;
+
+    function getPos(offset) {
+      if (offset ===  0) return 'center';
+      if (offset === -1) return 'left';
+      if (offset ===  1) return 'right';
+      if (offset  <  -1) return 'far-left';
+      return 'far-right';
+    }
+
+    function activateSlide(index) {
+      if (index === currentIndex) return;
+      currentIndex = index;
+
+      slides.forEach((s, i) => { s.dataset.pos = getPos(i - index); });
+      dots.forEach((d, i)   => d.classList.toggle('active', i === index));
+
+      const bg      = slides[index].dataset.bg;
+      const isLight = slides[index].dataset.light === 'true';
+
+      heroEl.style.background = bg;
+      heroEl.classList.toggle('hero--light', isLight);
+      nav.classList.toggle('nav--light', isLight);
+    }
+
+    window.addEventListener('scroll', () => {
+      const trackTop    = heroTrack.getBoundingClientRect().top + window.scrollY;
+      const trackHeight = heroTrack.offsetHeight - window.innerHeight;
+      const scrolled    = window.scrollY - trackTop;
+      const progress    = Math.max(0, Math.min(1, scrolled / trackHeight));
+
+      const index = Math.min(
+        Math.floor(progress * totalSlides),
+        totalSlides - 1
+      );
+      activateSlide(index);
+    }, { passive: true });
+
+    /* Inicializa com o primeiro slide */
+    activateSlide(0);
+  </script>
+
+</body>
+</html>
