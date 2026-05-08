@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alex "Poatan" Pereira — Nascido Para Destruir</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- ========================
+         LOADER
+         ======================== -->
+    <div id="page-loader">
+        <div class="loader-inner">
+            <p class="loader-line loader-line-1">NASCIDO</p>
+            <p class="loader-line loader-line-2">PARA</p>
+            <p class="loader-line loader-line-3">DESTRUIR</p>
+        </div>
+        <div class="loader-bar-wrap">
+            <div class="loader-bar-fill" id="loader-bar"></div>
+        </div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursor-follower"></div>
+
+    <!-- Noise Overlay -->
+    <div class="noise-overlay" aria-hidden="true"></div>
+
+    <!-- Global scroll progress (right edge) -->
+    <div class="global-progress" id="global-progress" aria-hidden="true">
+        <div class="global-progress-fill" id="global-progress-fill"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-logo">POATAN</div>
+        <button class="hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links" id="nav-links" role="list">
+            <li><a href="#origem"    class="nav-link" data-section="origem">ORIGEM</a></li>
+            <li><a href="#kickboxing" class="nav-link" data-section="kickboxing">KICKBOXING</a></li>
+            <li><a href="#glory"     class="nav-link" data-section="glory">GLORY</a></li>
+            <li><a href="#ufc"       class="nav-link" data-section="ufc">UFC</a></li>
+            <li><a href="#campeao"   class="nav-link" data-section="campeao">CAMPEÃO</a></li>
+        </ul>
+    </nav>
+
+    <!-- ========================
+         HERO
+         ======================== -->
+    <section class="section hero" id="hero" aria-label="Hero"
+             data-bg="#0a0a0a" data-accent="#D4AF37">
+        <canvas id="hero-canvas" aria-hidden="true"></canvas>
+        <div class="hero-content">
+            <div class="hero-name-wrapper">
+                <h1 class="hero-name" id="hero-name">ALEX PEREIRA</h1>
+            </div>
+            <div class="hero-subtitle-wrapper">
+                <p class="hero-subtitle" id="hero-subtitle">POATAN</p>
+            </div>
+            <div class="hero-tagline-wrapper">
+                <p class="hero-tagline" id="hero-tagline">Nascido para destruir. Destinado a reinar.</p>
+            </div>
+        </div>
+        <div class="scroll-indicator" aria-hidden="true">
+            <span>SCROLL</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- Year marker -->
+    <div class="year-marker" aria-hidden="true">
+        <span class="year-marker-text">1987</span>
+    </div>
+
+    <!-- ========================
+         SECTION 1: ORIGEM
+         ======================== -->
+    <section class="section section-origem" id="origem"
+             data-bg="#0a0a0a" data-accent="#C8102E">
+        <div class="container">
+            <div class="section-title-wrapper">
+                <h2 class="section-title split-title">ORIGEM</h2>
+            </div>
+            <div class="origem-content">
+                <div class="origem-text">
+                    <p class="lead-text word-reveal">Nascido em 5 de julho de 1987 em Contagem, Minas Gerais. Alex Pereira cresceu em condições humildes, encontrando nas artes marciais um caminho para transformar sua vida. Antes de se tornar uma lenda, ele era apenas um garoto do interior com um sonho enorme.</p>
+                    <div class="year-display">
+                        <span class="year-label">ANO DE NASCIMENTO</span>
+                        <span class="year-number" data-target="1987">0</span>
+                    </div>
+                    <div class="origin-detail">
+                        <div class="detail-item">
+                            <span class="detail-label">CIDADE</span>
+                            <span class="detail-value">Contagem, MG</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">PAÍS</span>
+                            <span class="detail-value">Brasil</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">APELIDO</span>
+                            <span class="detail-value">Poatan</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="origem-image">
+                    <div class="image-placeholder parallax-image" role="img" aria-label="Foto de Alex Pereira">
+                        <div class="image-inner">
+                            <div class="placeholder-content">
+                                <span class="placeholder-year">1987</span>
+                                <span class="placeholder-label">CONTAGEM — MG</span>
+                            </div>
+                        </div>
+                        <div class="image-cross" aria-hidden="true"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Year marker -->
+    <div class="year-marker" aria-hidden="true">
+        <span class="year-marker-text">2012</span>
+    </div>
+
+    <!-- ========================
+         SECTION 2: KICKBOXING
+         ======================== -->
+    <section class="section section-kickboxing section-career" id="kickboxing"
+             data-bg="#0a0a0a" data-accent="#e67e22">
+
+        <!-- Pinned stage -->
+        <div class="career-pin-stage" id="kb-pin">
+            <div class="phase-name-wrap">
+                <span class="phase-half phase-left" id="kb-left">KICK</span>
+                <div class="career-athlete-frame">
+                    <div class="career-athlete-inner">
+                        <span class="career-athlete-cross" aria-hidden="true"></span>
+                        <span class="athlete-era">2012 — 2019</span>
+                        <span class="athlete-phase-label">KICKBOXING</span>
+                    </div>
+                </div>
+                <span class="phase-half phase-right" id="kb-right">BOXING</span>
+            </div>
+            <div class="career-progress-bar" aria-hidden="true">
+                <div class="career-progress-fill" id="kb-progress"></div>
+            </div>
+        </div>
+
+        <!-- Scrollable content (revealed during pin) -->
+        <div class="container career-scroll-content" id="kb-content">
+            <div class="section-title-wrapper">
+                <h2 class="section-title split-title kick-title">A ARTE DOS GOLPES</h2>
+            </div>
+            <div class="kickboxing-content">
+                <p class="lead-text word-reveal">Antes do octógono, havia o ringue. Alex começou no Muay Thai e rapidamente migrou para o Kickboxing, onde seu poder de nocaute brutal chamou atenção do mundo inteiro.</p>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">CARTEL KICKBOXING</span>
+                        <div class="stat-numbers">
+                            <span class="stat-count" data-target="35">0</span>
+                            <span class="stat-unit">V</span>
+                            <span class="stat-separator">/</span>
+                            <span class="stat-count" data-target="6">0</span>
+                            <span class="stat-unit">D</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">NOCAUTES</span>
+                        <div class="stat-numbers">
+                            <span class="stat-count" data-target="25">0</span>
+                            <span class="stat-unit">KOs</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">ANOS DE CARREIRA</span>
+                        <div class="stat-numbers">
+                            <span class="stat-count" data-target="10">0</span>
+                            <span class="stat-unit">+</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-horizontal">
+                    <div class="timeline-track" id="kb-timeline">
+                        <div class="timeline-item-h">
+                            <div class="timeline-dot-h"></div>
+                            <span class="timeline-year-h">2012</span>
+                            <span class="timeline-desc-h">Estreia profissional</span>
+                        </div>
+                        <div class="timeline-item-h">
+                            <div class="timeline-dot-h"></div>
+                            <span class="timeline-year-h">2014</span>
+                            <span class="timeline-desc-h">Ascensão no cenário mundial</span>
+                        </div>
+                        <div class="timeline-item-h">
+                            <div class="timeline-dot-h"></div>
+                            <span class="timeline-year-h">2017</span>
+                            <span class="timeline-desc-h">Domínio absoluto</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Year marker -->
+    <div class="year-marker" aria-hidden="true">
+        <span class="year-marker-text">2015</span>
+    </div>
+
+    <!-- ========================
+         SECTION 3: GLORY
+         ======================== -->
+    <section class="section section-glory section-career" id="glory"
+             data-bg="#060606" data-accent="#c0392b">
+
+        <!-- Pinned stage -->
+        <div class="career-pin-stage career-pin-glory" id="glory-pin">
+            <canvas id="glory-canvas" aria-hidden="true"></canvas>
+            <div class="phase-name-wrap">
+                <span class="phase-half phase-left" id="glory-left">GLO</span>
+                <div class="career-athlete-frame glory-athlete">
+                    <div class="career-athlete-inner">
+                        <span class="career-athlete-cross" aria-hidden="true"></span>
+                        <span class="athlete-era">2015 — 2019</span>
+                        <span class="athlete-phase-label">GLORY</span>
+                    </div>
+                </div>
+                <span class="phase-half phase-right" id="glory-right">RY</span>
+            </div>
+            <div class="career-progress-bar" aria-hidden="true">
+                <div class="career-progress-fill" id="glory-progress"></div>
+            </div>
+        </div>
+
+        <!-- Scrollable content -->
+        <div class="container career-scroll-content" id="glory-content">
+            <div class="section-title-wrapper">
+                <h2 class="section-title glitch-title" data-text="REINANDO NO GLORY">REINANDO NO GLORY</h2>
+            </div>
+            <div class="glory-content">
+                <p class="lead-text word-reveal">No GLORY Kickboxing, Alex Pereira se tornou bicampeão mundial. Derrotou os maiores nomes do esporte com nocautes devastadores, colocando o Brasil no topo do kickboxing mundial.</p>
+                <div class="glory-highlight">
+                    <span class="glory-big-text">2x</span>
+                    <span class="glory-title-text">CAMPEÃO MUNDIAL GLORY</span>
+                </div>
+                <div class="glory-stats">
+                    <div class="glory-stat">
+                        <span class="glory-stat-num" data-target="17">0</span>
+                        <span class="glory-stat-label">KOs no GLORY</span>
+                    </div>
+                    <div class="glory-divider" aria-hidden="true"></div>
+                    <div class="glory-stat">
+                        <span class="glory-stat-num" data-target="2">0</span>
+                        <span class="glory-stat-label">Cinturões</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Year marker -->
+    <div class="year-marker" aria-hidden="true">
+        <span class="year-marker-text">2021</span>
+    </div>
+
+    <!-- ========================
+         SECTION 4: UFC
+         ======================== -->
+    <section class="section section-ufc section-career" id="ufc"
+             data-bg="#0a0a0a" data-accent="#D4AF37">
+
+        <!-- Pinned stage -->
+        <div class="career-pin-stage career-pin-ufc" id="ufc-pin">
+            <div class="phase-name-wrap">
+                <span class="phase-half phase-left" id="ufc-left">U</span>
+                <div class="career-athlete-frame ufc-athlete">
+                    <div class="career-athlete-inner">
+                        <span class="career-athlete-cross" aria-hidden="true"></span>
+                        <span class="athlete-era">2021 — HOJE</span>
+                        <span class="athlete-phase-label">UFC</span>
+                    </div>
+                </div>
+                <span class="phase-half phase-right" id="ufc-right">FC</span>
+            </div>
+            <div class="career-progress-bar" aria-hidden="true">
+                <div class="career-progress-fill" id="ufc-progress"></div>
+            </div>
+        </div>
+
+        <!-- Scrollable content -->
+        <div class="ufc-rip-overlay" id="ufc-rip" aria-hidden="true"></div>
+        <div class="container career-scroll-content" id="ufc-content">
+            <div class="section-title-wrapper">
+                <h2 class="section-title split-title">O OCTÓGONO CHAMOU</h2>
+            </div>
+            <div class="ufc-content">
+                <p class="lead-text word-reveal">Em 2021, Alex Pereira estreou no UFC. Em tempo recorde, chegou ao topo do mundo. Nocauteou Israel Adesanya — seu algoz no kickboxing — e escreveu uma das histórias mais improváveis da história do MMA.</p>
+                <div class="timeline-vertical">
+                    <div class="timeline-item-v" data-index="0">
+                        <div class="timeline-dot-v"></div>
+                        <div class="timeline-content-v">
+                            <span class="timeline-year-v">2021</span>
+                            <span class="timeline-event">Estreia no UFC</span>
+                        </div>
+                    </div>
+                    <div class="timeline-item-v" data-index="1">
+                        <div class="timeline-dot-v"></div>
+                        <div class="timeline-content-v">
+                            <span class="timeline-year-v">2022</span>
+                            <span class="timeline-event">Vence o cinturão Middleweight nocauteando Adesanya</span>
+                        </div>
+                    </div>
+                    <div class="timeline-item-v" data-index="2">
+                        <div class="timeline-dot-v"></div>
+                        <div class="timeline-content-v">
+                            <span class="timeline-year-v">2023</span>
+                            <span class="timeline-event">Perde o cinturão. Sobe para Light Heavyweight</span>
+                        </div>
+                    </div>
+                    <div class="timeline-item-v" data-index="3">
+                        <div class="timeline-dot-v"></div>
+                        <div class="timeline-content-v">
+                            <span class="timeline-year-v">2023</span>
+                            <span class="timeline-event">Vence o cinturão Light Heavyweight em apenas 11 dias de preparação</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Year marker -->
+    <div class="year-marker" aria-hidden="true">
+        <span class="year-marker-text">2023</span>
+    </div>
+
+    <!-- ========================
+         SECTION 5: CAMPEÃO
+         ======================== -->
+    <section class="section section-campeao" id="campeao"
+             data-bg="#070500" data-accent="#D4AF37">
+        <div class="campeao-glow" aria-hidden="true"></div>
+        <div class="container">
+            <div class="campeao-hero-title">
+                <h2 class="campeao-big-title" id="campeao-title">POATAN</h2>
+            </div>
+            <p class="campeao-subtitle" id="campeao-subtitle">Campeão Mundial UFC Light Heavyweight</p>
+            <div class="campeao-stats">
+                <div class="campeao-stat">
+                    <div class="campeao-numbers">
+                        <span class="campeao-num" data-target="21">0</span>
+                        <span class="campeao-dash">—</span>
+                        <span class="campeao-num" data-target="2">0</span>
+                        <span class="campeao-dash">—</span>
+                        <span class="campeao-num" data-target="0">0</span>
+                    </div>
+                    <span class="campeao-label">CARTEL MMA (V / D / E)</span>
+                </div>
+                <div class="campeao-stat">
+                    <span class="campeao-num" data-target="15">0</span>
+                    <span class="campeao-label">NOCAUTES</span>
+                </div>
+                <div class="campeao-stat">
+                    <span class="campeao-num" data-target="3">0</span>
+                    <span class="campeao-label">TÍTULOS MUNDIAIS</span>
+                </div>
+                <div class="campeao-stat">
+                    <span class="campeao-num" data-target="4">0</span>
+                    <span class="campeao-label">DEFESAS UFC</span>
+                </div>
+            </div>
+            <p class="campeao-phrase" id="campeao-phrase">Da rua de Contagem ao topo do mundo. Isso é Poatan.</p>
+        </div>
+    </section>
+
+    <!-- ========================
+         FOOTER
+         ======================== -->
+    <footer class="section section-footer" id="footer">
+        <div class="footer-content">
+            <div class="footer-name-wrapper">
+                <p class="footer-site-name" id="footer-poatan">POATAN</p>
+                <canvas id="footer-canvas" aria-hidden="true"></canvas>
+            </div>
+            <p class="footer-credits">Site criado com fins educacionais.</p>
+            <p class="footer-inspired">Inspirado em ousmaneballondor.fr</p>
+        </div>
+    </footer>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
+    <!-- Custom Scripts -->
+    <script src="js/canvas.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/animations.js"></script>
+</body>
+</html>

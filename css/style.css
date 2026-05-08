@@ -1,0 +1,1381 @@
+/* ============================================================
+   VARIABLES & RESET
+   ============================================================ */
+:root {
+    --black:     #0a0a0a;
+    --red:       #C8102E;
+    --gold:      #D4AF37;
+    --gold-dark: #9a7d20;
+    --white:     #F0EDE8;
+    --pad:       clamp(70px, 10vw, 130px);
+}
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    cursor: none;
+    overflow-x: hidden;
+    line-height: 1.7;
+}
+
+/* ============================================================
+   NOISE TEXTURE
+   ============================================================ */
+.noise-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9000;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 300px 300px;
+}
+
+/* ============================================================
+   CUSTOM CURSOR
+   ============================================================ */
+.cursor {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: var(--red);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    left: 0; top: 0;
+    transform: translate(-50%, -50%);
+    will-change: left, top;
+    transition: width 0.2s ease, height 0.2s ease, opacity 0.2s ease;
+}
+
+.cursor.hover {
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+}
+
+.cursor-follower {
+    position: fixed;
+    width: 34px;
+    height: 34px;
+    border: 1.5px solid rgba(200, 16, 46, 0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99998;
+    left: 0; top: 0;
+    transform: translate(-50%, -50%);
+    will-change: left, top;
+    transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+}
+
+.cursor-follower.hover {
+    width: 48px;
+    height: 48px;
+    opacity: 0.3;
+}
+
+/* Hide cursor on touch devices */
+@media (hover: none) {
+    .cursor, .cursor-follower { display: none; }
+    body { cursor: auto; }
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+.nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 50px;
+    z-index: 1000;
+    transition: background 0.4s ease, padding 0.3s ease;
+}
+
+.nav.scrolled {
+    background: rgba(10, 10, 10, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.08);
+    padding: 14px 50px;
+}
+
+.nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--gold);
+    letter-spacing: 5px;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 44px;
+    align-items: center;
+}
+
+.nav-link {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: rgba(240, 237, 232, 0.75);
+    text-decoration: none;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--gold);
+    transition: width 0.35s ease;
+}
+
+.nav-link:hover { color: var(--gold); }
+.nav-link:hover::after { width: 100%; }
+
+/* Hamburger */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: none;
+    padding: 6px;
+    z-index: 1001;
+}
+
+.hamburger span {
+    display: block;
+    width: 26px;
+    height: 2px;
+    background: var(--white);
+    transition: transform 0.35s ease, opacity 0.35s ease;
+    transform-origin: center;
+}
+
+.hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ============================================================
+   SECTION BASE
+   ============================================================ */
+.section {
+    position: relative;
+    min-height: 100vh;
+    padding: var(--pad) 0;
+    overflow: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 50px;
+    position: relative;
+    z-index: 2;
+}
+
+/* Section title */
+.section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(44px, 8vw, 108px);
+    letter-spacing: 4px;
+    line-height: 1;
+    display: block;
+}
+
+.section-title-wrapper {
+    overflow: hidden;
+    margin-bottom: 56px;
+}
+
+.section-title .char {
+    display: inline-block;
+    transform: translateY(110%);
+    opacity: 0;
+    will-change: transform, opacity;
+}
+
+.lead-text {
+    font-size: clamp(15px, 1.5vw, 18px);
+    color: rgba(240, 237, 232, 0.75);
+    line-height: 1.85;
+    max-width: 600px;
+}
+
+/* ============================================================
+   HERO SECTION
+   ============================================================ */
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background: var(--black);
+}
+
+#hero-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+}
+
+.hero-name-wrapper,
+.hero-subtitle-wrapper,
+.hero-tagline-wrapper {
+    overflow: hidden;
+}
+
+.hero-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 11vw, 160px);
+    color: var(--gold);
+    letter-spacing: 8px;
+    line-height: 1;
+    transform: translateY(110%);
+    opacity: 0;
+    display: block;
+    will-change: transform, opacity;
+    text-shadow: 0 0 80px rgba(212, 175, 55, 0.15);
+}
+
+.hero-subtitle {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(28px, 5.5vw, 72px);
+    color: var(--red);
+    letter-spacing: 22px;
+    transform: translateY(110%);
+    opacity: 0;
+    margin-top: 4px;
+    will-change: transform, opacity;
+}
+
+.hero-tagline {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(10px, 1.2vw, 14px);
+    color: rgba(240, 237, 232, 0.45);
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    margin-top: 24px;
+    transform: translateY(110%);
+    opacity: 0;
+    will-change: transform, opacity;
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+    position: absolute;
+    bottom: 42px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    z-index: 2;
+}
+
+.scroll-indicator span {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 10px;
+    letter-spacing: 5px;
+    color: rgba(240, 237, 232, 0.3);
+}
+
+.scroll-line {
+    width: 1px;
+    height: 64px;
+    background: linear-gradient(to bottom, rgba(212, 175, 55, 0.7), transparent);
+    animation: scrollPulse 2.2s ease-in-out infinite;
+    transform-origin: top;
+}
+
+@keyframes scrollPulse {
+    0%, 100% { opacity: 1; transform: scaleY(1); }
+    50%       { opacity: 0.25; transform: scaleY(0.6); }
+}
+
+/* ============================================================
+   SECTION 1 — ORIGEM
+   ============================================================ */
+.section-origem { background: var(--black); }
+
+.section-origem .section-title { color: var(--white); }
+
+.origem-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+}
+
+.origem-text { display: flex; flex-direction: column; gap: 0; }
+
+.year-display {
+    margin: 36px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.year-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--red);
+}
+
+.year-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 7vw, 96px);
+    color: var(--gold);
+    line-height: 1;
+}
+
+.origin-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    border-left: 2px solid var(--red);
+    padding-left: 22px;
+    margin-top: 10px;
+}
+
+.detail-item { display: flex; flex-direction: column; gap: 3px; }
+
+.detail-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(240, 237, 232, 0.35);
+}
+
+.detail-value {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--white);
+}
+
+/* Image placeholder */
+.image-placeholder {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    background: linear-gradient(140deg, #181818 0%, #222 50%, #141414 100%);
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.image-placeholder::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 35%, rgba(212, 175, 55, 0.04) 50%, transparent 65%);
+    animation: shimmer 4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%   { transform: translateX(-120%) translateY(-120%); }
+    100% { transform: translateX(120%) translateY(120%); }
+}
+
+.image-cross {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(212, 175, 55, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(212, 175, 55, 0.06) 1px, transparent 1px);
+    background-size: 50px 50px;
+}
+
+.image-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    padding: 28px;
+}
+
+.placeholder-content { display: flex; flex-direction: column; gap: 4px; }
+
+.placeholder-year {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 56px;
+    color: rgba(212, 175, 55, 0.25);
+    line-height: 1;
+}
+
+.placeholder-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: rgba(240, 237, 232, 0.25);
+}
+
+/* ============================================================
+   SECTION 2 — KICKBOXING
+   ============================================================ */
+.section-kickboxing {
+    background: linear-gradient(160deg, #0a0a0a 0%, #160608 55%, #0a0a0a 100%);
+}
+
+.kick-title { color: var(--red); }
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin: 48px 0;
+}
+
+.stat-card {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(200, 16, 46, 0.18);
+    padding: 28px 22px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, var(--red), transparent);
+}
+
+.stat-card:hover {
+    border-color: rgba(200, 16, 46, 0.45);
+    background: rgba(200, 16, 46, 0.04);
+}
+
+.stat-label {
+    display: block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: rgba(240, 237, 232, 0.35);
+    margin-bottom: 10px;
+}
+
+.stat-numbers {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.stat-count {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 5vw, 68px);
+    color: var(--red);
+    line-height: 1;
+}
+
+.stat-unit {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: rgba(240, 237, 232, 0.45);
+}
+
+.stat-separator {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: rgba(240, 237, 232, 0.15);
+    margin: 0 2px;
+}
+
+/* Horizontal Timeline */
+.timeline-horizontal { margin-top: 64px; }
+
+.timeline-track {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    padding: 36px 0 0;
+}
+
+.timeline-track::before {
+    content: '';
+    position: absolute;
+    top: 42px; left: 6px;
+    width: 0;
+    height: 1px;
+    background: linear-gradient(90deg, var(--red), rgba(200, 16, 46, 0.3));
+    transition: width 1.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.timeline-track.animated::before { width: calc(100% - 12px); }
+
+.timeline-item-h {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.timeline-item-h.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.timeline-dot-h {
+    width: 13px; height: 13px;
+    border-radius: 50%;
+    background: var(--red);
+    box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.25);
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+}
+
+.timeline-year-h {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--gold);
+    letter-spacing: 2px;
+}
+
+.timeline-desc-h {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: rgba(240, 237, 232, 0.45);
+    text-transform: uppercase;
+    text-align: center;
+    max-width: 130px;
+}
+
+/* ============================================================
+   SECTION 3 — GLORY
+   ============================================================ */
+.section-glory { background: #060606; }
+
+#glory-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    opacity: 0.45;
+}
+
+/* Glitch */
+.glitch-title {
+    color: var(--white);
+    position: relative;
+}
+
+.glitch-title::before,
+.glitch-title::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    font-family: inherit;
+    font-size: inherit;
+    letter-spacing: inherit;
+    line-height: inherit;
+}
+
+.glitch-title::before {
+    color: var(--red);
+    clip-path: polygon(0 25%, 100% 25%, 100% 45%, 0 45%);
+    animation: glitchBefore 4s infinite;
+}
+
+.glitch-title::after {
+    color: var(--gold);
+    clip-path: polygon(0 62%, 100% 62%, 100% 78%, 0 78%);
+    animation: glitchAfter 4s infinite;
+}
+
+@keyframes glitchBefore {
+    0%, 84%, 100% { transform: translate(0); opacity: 0; }
+    86%            { transform: translate(-5px, 2px); opacity: 1; }
+    88%            { transform: translate(5px, -1px); opacity: 1; }
+    90%            { transform: translate(-3px, 0); opacity: 1; }
+    92%            { transform: translate(0); opacity: 0; }
+}
+
+@keyframes glitchAfter {
+    0%, 84%, 100% { transform: translate(0); opacity: 0; }
+    87%            { transform: translate(5px, -2px); opacity: 1; }
+    89%            { transform: translate(-5px, 1px); opacity: 1; }
+    91%            { transform: translate(3px, 0); opacity: 1; }
+    93%            { transform: translate(0); opacity: 0; }
+}
+
+.glory-content { position: relative; z-index: 2; }
+
+.glory-highlight {
+    text-align: center;
+    margin: 64px 0 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.glory-big-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(90px, 16vw, 200px);
+    color: var(--gold);
+    line-height: 0.85;
+    display: block;
+    text-shadow: 0 0 60px rgba(212, 175, 55, 0.2);
+}
+
+.glory-title-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(18px, 3.5vw, 44px);
+    color: var(--white);
+    letter-spacing: 7px;
+    display: block;
+    margin-top: 8px;
+}
+
+.glory-stats {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 72px;
+    margin-top: 48px;
+}
+
+.glory-stat { text-align: center; }
+
+.glory-stat-num {
+    display: block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(60px, 9vw, 110px);
+    color: var(--red);
+    line-height: 1;
+}
+
+.glory-stat-label {
+    display: block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: rgba(240, 237, 232, 0.35);
+    margin-top: 6px;
+}
+
+.glory-divider {
+    width: 1px;
+    height: 90px;
+    background: rgba(212, 175, 55, 0.25);
+}
+
+/* ============================================================
+   SECTION 4 — UFC
+   ============================================================ */
+.section-ufc { background: var(--black); }
+
+.ufc-rip-overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--red);
+    clip-path: polygon(0 0, 100% 0, 100% 0%, 0 0%);
+    z-index: 3;
+    pointer-events: none;
+    will-change: clip-path;
+}
+
+.section-ufc .section-title { color: var(--white); }
+
+.ufc-content { position: relative; z-index: 2; }
+
+/* Vertical Timeline */
+.timeline-vertical {
+    margin-top: 56px;
+    position: relative;
+    padding-left: 50px;
+}
+
+.timeline-vertical::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 16px;
+    width: 2px;
+    height: calc(100% - 16px);
+    background: linear-gradient(to bottom, var(--red), rgba(200, 16, 46, 0.1));
+}
+
+.timeline-item-v {
+    position: relative;
+    margin-bottom: 52px;
+    opacity: 0;
+    transform: translateX(-24px);
+    will-change: transform, opacity;
+}
+
+.timeline-item-v:last-child { margin-bottom: 0; }
+
+.timeline-dot-v {
+    position: absolute;
+    left: -50px;
+    top: 8px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--red);
+    box-shadow: 0 0 0 4px rgba(200, 16, 46, 0.18), 0 0 20px rgba(200, 16, 46, 0.3);
+    flex-shrink: 0;
+}
+
+.timeline-year-v {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(32px, 4vw, 48px);
+    color: var(--gold);
+    display: block;
+    line-height: 1;
+    letter-spacing: 2px;
+}
+
+.timeline-event {
+    font-size: 16px;
+    color: rgba(240, 237, 232, 0.65);
+    margin-top: 4px;
+    display: block;
+    font-weight: 400;
+    max-width: 500px;
+}
+
+/* ============================================================
+   SECTION 5 — CAMPEÃO
+   ============================================================ */
+.section-campeao {
+    background: #070500;
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.campeao-glow {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(700px, 90vw);
+    height: min(700px, 90vw);
+    background: radial-gradient(circle,
+        rgba(212, 175, 55, 0.12) 0%,
+        rgba(212, 175, 55, 0.04) 45%,
+        transparent 70%);
+    animation: glowPulse 4s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes glowPulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1);   opacity: 1; }
+    50%       { transform: translate(-50%, -50%) scale(1.2); opacity: 0.65; }
+}
+
+.section-campeao .container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.campeao-hero-title {
+    overflow: hidden;
+    width: 100%;
+}
+
+.campeao-big-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 17vw, 230px);
+    color: var(--gold);
+    letter-spacing: 8px;
+    line-height: 0.88;
+    text-shadow:
+        5px 5px 0px var(--red),
+        -2px -2px 0px rgba(200, 16, 46, 0.2),
+        0 0 80px rgba(212, 175, 55, 0.15);
+    transform: translateY(110%);
+    display: block;
+    will-change: transform;
+}
+
+.campeao-subtitle {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(13px, 2vw, 22px);
+    letter-spacing: 7px;
+    color: rgba(240, 237, 232, 0.5);
+    margin: 18px 0 60px;
+    opacity: 0;
+    transform: translateY(18px);
+    will-change: transform, opacity;
+}
+
+.campeao-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 36px;
+    width: 100%;
+    margin-bottom: 60px;
+    border-top: 1px solid rgba(212, 175, 55, 0.12);
+    padding-top: 56px;
+}
+
+.campeao-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.campeao-numbers {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.campeao-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(44px, 5.5vw, 80px);
+    color: var(--gold);
+    line-height: 1;
+    display: block;
+    opacity: 0;
+    transform: translateY(30px);
+    will-change: transform, opacity;
+}
+
+.campeao-dash {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 38px;
+    color: rgba(212, 175, 55, 0.25);
+}
+
+.campeao-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: rgba(240, 237, 232, 0.3);
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.campeao-phrase {
+    font-size: clamp(13px, 1.8vw, 19px);
+    color: rgba(240, 237, 232, 0.5);
+    font-style: italic;
+    letter-spacing: 2px;
+    border-top: 1px solid rgba(212, 175, 55, 0.12);
+    padding-top: 44px;
+    width: 100%;
+    opacity: 0;
+    transform: translateY(18px);
+    will-change: transform, opacity;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.section-footer {
+    background: #000;
+    min-height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+}
+
+.footer-content {
+    text-align: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.footer-name-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 24px;
+}
+
+.footer-site-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 12vw, 150px);
+    color: rgba(212, 175, 55, 0.12);
+    letter-spacing: 12px;
+    line-height: 1;
+    position: relative;
+    z-index: 2;
+    user-select: none;
+}
+
+#footer-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.footer-credits,
+.footer-inspired {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: rgba(240, 237, 232, 0.18);
+    text-transform: uppercase;
+    font-family: 'Inter', sans-serif;
+}
+
+/* ============================================================
+   RESPONSIVE — 768px
+   ============================================================ */
+@media (max-width: 768px) {
+    .nav { padding: 16px 22px; }
+    .nav.scrolled { padding: 12px 22px; }
+
+    .nav-links {
+        position: fixed;
+        top: 0; right: -100%;
+        width: 72%;
+        height: 100vh;
+        background: rgba(8, 8, 8, 0.97);
+        flex-direction: column;
+        justify-content: center;
+        gap: 32px;
+        transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(24px);
+        border-left: 1px solid rgba(212, 175, 55, 0.08);
+        z-index: 1000;
+    }
+
+    .nav-links.open { right: 0; }
+    .nav-link { font-size: 28px; letter-spacing: 4px; }
+    .hamburger { display: flex; }
+
+    .container { padding: 0 22px; }
+
+    .origem-content { grid-template-columns: 1fr; gap: 44px; }
+    .stats-grid { grid-template-columns: 1fr; gap: 14px; }
+    .campeao-stats { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .glory-stats { flex-direction: column; gap: 28px; }
+    .glory-divider { width: 64px; height: 1px; }
+
+    .timeline-track {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 32px;
+        padding: 0 0 0 30px;
+    }
+    .timeline-track::before {
+        top: 6px; left: 6px;
+        width: 1px; height: 0;
+        transition: height 1.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .timeline-track.animated::before { width: 1px; height: calc(100% - 6px); }
+
+    .timeline-item-h { align-items: flex-start; }
+    .timeline-dot-h { margin-left: -30px; }
+}
+
+@media (max-width: 480px) {
+    .campeao-stats { grid-template-columns: 1fr; }
+    .campeao-numbers { justify-content: center; }
+    .hero-subtitle { letter-spacing: 12px; }
+    .glory-stats { gap: 20px; }
+}
+
+/* ============================================================
+   LENIS — disable native smooth scroll
+   ============================================================ */
+html { scroll-behavior: auto; }
+
+/* ============================================================
+   PAGE LOADER
+   ============================================================ */
+#page-loader {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 48px;
+    pointer-events: all;
+}
+
+.loader-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    overflow: hidden;
+}
+
+.loader-line {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 10px;
+    line-height: 1;
+    opacity: 0;
+    transform: translateY(40px);
+    will-change: transform, opacity;
+}
+
+.loader-line-1 {
+    font-size: clamp(48px, 10vw, 120px);
+    color: var(--white);
+}
+
+.loader-line-2 {
+    font-size: clamp(20px, 4vw, 48px);
+    color: rgba(240, 237, 232, 0.35);
+    letter-spacing: 18px;
+    margin: 4px 0;
+}
+
+.loader-line-3 {
+    font-size: clamp(48px, 10vw, 120px);
+    color: var(--red);
+}
+
+.loader-bar-wrap {
+    width: min(280px, 60vw);
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+    position: relative;
+    overflow: hidden;
+}
+
+.loader-bar-fill {
+    position: absolute;
+    left: 0; top: 0;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--red), var(--gold));
+    transition: width 0.05s linear;
+}
+
+/* ============================================================
+   GLOBAL SCROLL PROGRESS (right edge)
+   ============================================================ */
+.global-progress {
+    position: fixed;
+    right: 0; top: 0;
+    width: 2px;
+    height: 100vh;
+    background: rgba(255,255,255,0.05);
+    z-index: 800;
+    pointer-events: none;
+}
+
+.global-progress-fill {
+    width: 100%;
+    height: 0%;
+    background: linear-gradient(to bottom, var(--red), var(--gold));
+    transform-origin: top;
+    transition: height 0.1s linear;
+}
+
+/* ============================================================
+   YEAR MARKERS (outline text between sections)
+   ============================================================ */
+.year-marker {
+    position: relative;
+    height: 30vw;
+    max-height: 360px;
+    min-height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.year-marker-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(120px, 22vw, 280px);
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.055);
+    letter-spacing: 8px;
+    line-height: 1;
+    user-select: none;
+    will-change: transform;
+}
+
+/* ============================================================
+   CAREER SECTIONS — PINNING STRUCTURE
+   ============================================================ */
+.section-career {
+    min-height: 250vh;
+    padding: 0;
+    overflow: visible;  /* let pin escape */
+    display: block;
+}
+
+/* Pin stage: stays fixed while section scrolls */
+.career-pin-stage {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    /* Explicit bg required — position:fixed breaks CSS inheritance */
+    background: #0a0a0a;
+}
+
+.section-kickboxing .career-pin-stage {
+    background: linear-gradient(160deg, #0a0a0a 0%, #160608 55%, #0a0a0a 100%);
+}
+.career-pin-glory {
+    background: #060606;
+}
+.career-pin-ufc {
+    background: #0a0a0a;
+}
+
+/* glory canvas inside pin stage */
+.career-pin-glory #glory-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    opacity: 0.35;
+}
+
+.phase-name-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+/* Giant outline phase letters */
+.phase-half {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(60px, 13vw, 180px);
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.12);
+    letter-spacing: 4px;
+    line-height: 1;
+    opacity: 0;
+    will-change: transform, opacity;
+    flex-shrink: 0;
+}
+
+/* Positions controlled entirely by GSAP — do not set transform here */
+.phase-left, .phase-right { opacity: 0; }
+
+/* Athlete frame (center image placeholder) */
+.career-athlete-frame {
+    width: clamp(160px, 22vw, 280px);
+    aspect-ratio: 3 / 4;
+    border: 1px solid rgba(255,255,255,0.08);
+    position: relative;
+    z-index: 5;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: #111;
+}
+
+.career-athlete-frame::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+}
+
+.career-athlete-cross {
+    position: absolute;
+    inset: 0;
+    display: block;
+}
+.career-athlete-cross::before,
+.career-athlete-cross::after {
+    content: '';
+    position: absolute;
+    background: rgba(255,255,255,0.05);
+}
+.career-athlete-cross::before {
+    width: 1px; height: 100%;
+    left: 50%; top: 0;
+}
+.career-athlete-cross::after {
+    width: 100%; height: 1px;
+    top: 50%; left: 0;
+}
+
+.career-athlete-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 18px;
+    gap: 4px;
+}
+
+.athlete-era {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: rgba(240,237,232,0.3);
+}
+
+.athlete-phase-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 4px;
+    color: rgba(240,237,232,0.6);
+}
+
+/* Per-section progress bar (bottom of pin stage) */
+.career-progress-bar {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%;
+    height: 2px;
+    background: rgba(255,255,255,0.06);
+}
+
+.career-progress-fill {
+    height: 100%;
+    width: 0%;
+    transform-origin: left;
+    /* color set per section via JS */
+    background: var(--red);
+    transition: none;
+}
+
+/* Pin stage stacking */
+.career-pin-stage { z-index: 1; }
+
+/* Scrollable content scrolls OVER the pin stage */
+.career-scroll-content {
+    padding: clamp(60px, 8vw, 120px) 50px;
+    position: relative;
+    z-index: 10;
+}
+
+/* Each career section's scroll content needs a solid bg */
+.section-kickboxing .career-scroll-content {
+    background: #0d0608;
+}
+.section-glory .career-scroll-content {
+    background: #060606;
+}
+.section-ufc .career-scroll-content {
+    background: #0a0a0a;
+}
+
+/* ============================================================
+   ACTIVE NAV LINK
+   ============================================================ */
+.nav-link.is-active {
+    color: var(--gold) !important;
+}
+.nav-link.is-active::after {
+    width: 100% !important;
+    background: var(--gold);
+}
+
+/* ============================================================
+   WORD-BY-WORD REVEAL
+   ============================================================ */
+.word-reveal .word-wrap {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+    margin-right: 0.25em;
+    line-height: inherit;
+}
+
+.word-reveal .word-inner {
+    display: inline-block;
+    transform: translateY(100%);
+    opacity: 0;
+    will-change: transform, opacity;
+}
+
+/* ============================================================
+   SECTION COLOR TRANSITION
+   ============================================================ */
+body {
+    transition: background-color 0.6s ease;
+}
+
+/* ============================================================
+   SECTION-CAREER responsive
+   ============================================================ */
+@media (max-width: 768px) {
+    .section-career { min-height: 200vh; }
+
+    .phase-half {
+        font-size: clamp(40px, 10vw, 90px);
+        -webkit-text-stroke-width: 0.5px;
+    }
+
+    .career-athlete-frame {
+        width: clamp(100px, 28vw, 160px);
+    }
+
+    .career-scroll-content {
+        padding: 50px 22px;
+    }
+
+    .year-marker { height: 20vw; min-height: 80px; }
+    .year-marker-text { font-size: clamp(70px, 18vw, 160px); }
+}
+
+@media (max-width: 480px) {
+    .phase-half { font-size: clamp(30px, 8vw, 70px); }
+    .career-athlete-frame { width: 90px; }
+}
